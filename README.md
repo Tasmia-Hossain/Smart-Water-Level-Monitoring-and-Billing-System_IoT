@@ -41,7 +41,9 @@ The system consists of four main components:
 4. **Cloud / Visualization Layer**
    - Blynk IoT platform for data visualization and user interaction
 
-![IoT System Architecture](images/block_diagram.png)
+<p align="center">
+  <img src="images/block_diagram.png" width="500">
+</p>
 
 ---
 
@@ -61,7 +63,7 @@ The system consists of four main components:
 
 ---
 
-## Circuit Diagram Explanation
+## Circuit Diagram
 
 ### ESP32 Pin Connections
 
@@ -75,7 +77,6 @@ The system consists of four main components:
 | VCC | 5V / 3.3V |
 | GND | GND |
 
----
 
 ### Ultrasonic Sensor (HC-SR04)
 
@@ -88,7 +89,6 @@ The system consists of four main components:
 
 **Purpose:** Measures the distance between the sensor and the water surface to determine the water level.
 
----
 
 ### Relay Module
 
@@ -100,7 +100,6 @@ The system consists of four main components:
 
 **Purpose:** Controls the water pump automatically based on system logic.
 
----
 
 ### Buzzer
 
@@ -111,7 +110,6 @@ The system consists of four main components:
 
 **Purpose:** Provides an alert when the tank reaches a critical level.
 
----
 
 ### Water Flow Sensor (YF-S201)
 
@@ -154,7 +152,9 @@ The system consists of four main components:
 9. Data is sent to the Blynk IoT dashboard  
 10. The cycle repeats continuously  
 
-![Workflow](images/workflow_diagram.png)
+<p align="center">
+  <img src="images/workflow_diagram.png" width="400">
+</p>
 
 ---
 
@@ -184,7 +184,9 @@ The Blynk dashboard provides the following information:
 - Daily and monthly usage  
 - Estimated billing amount  
 
-![IoT Dashboard](images/dashboard.png)
+<p align="center">
+  <img src="images/dashboard.png" width="700">
+</p>
 ---
 
 ## Installation and Setup
