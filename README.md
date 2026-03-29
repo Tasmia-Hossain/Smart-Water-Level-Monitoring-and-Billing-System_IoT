@@ -199,7 +199,7 @@ The Blynk dashboard provides the following information:
 
 | Web Dashboard | Blynk Mobile App |
 |---------------|-----------------|
-| <img src="images/dashboard.png" width="500"> | <img src="images/blynk_app.png" width="250"> |
+| <img src="images/dashboard.png" width="500"> | <img src="images/blynk_app.jpg" width="250"> |
 
 ---
 
