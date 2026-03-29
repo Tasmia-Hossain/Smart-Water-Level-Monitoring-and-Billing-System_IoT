@@ -196,7 +196,7 @@ The Blynk dashboard provides the following information:
  
 | Tank View | Circuit Close-up |
 |-----------|-----------------|
-| <img src="images/tank_view.jpg" width="300"> | <img src="images/circuit_closeup.jpg" width="300"> |
+| <img src="images/tank_view.jpeg" width="300"> | <img src="images/circuit_closeup.jpg" width="300"> |
  
 ---
 
