@@ -187,7 +187,7 @@ The Blynk dashboard provides the following information:
 <p align="center">
   <img src="images/dashboard.png" width="700">
 </p>
----
+
 
 ## Installation and Setup
 
