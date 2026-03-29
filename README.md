@@ -102,7 +102,7 @@ The system consists of four main components:
 9. Data is sent to the Blynk IoT dashboard  
 10. The cycle repeats continuously  
 
-![Workflow](images/workflow.png)
+![Workflow](images/workflow_diagram.png)
 
 ---
 
