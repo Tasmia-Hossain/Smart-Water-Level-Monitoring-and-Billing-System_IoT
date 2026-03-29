@@ -23,7 +23,7 @@ The proposed solution provides a low-cost, scalable, and automated approach for 
 
 ---
 
-## System Architecture
+## IoT System Architecture
 
 The system consists of four main components:
 
@@ -41,7 +41,7 @@ The system consists of four main components:
 4. **Cloud / Visualization Layer**
    - Blynk IoT platform for data visualization and user interaction
 
-![System Architecture](images/block_diagram.png)
+![IoT System Architecture](images/block_diagram.png)
 
 ---
 
@@ -132,6 +132,7 @@ The Blynk dashboard provides the following information:
 - Daily and monthly usage  
 - Estimated billing amount  
 
+![IoT Dashboard](images/dashboard.png)
 ---
 
 ## Installation and Setup
