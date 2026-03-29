@@ -188,6 +188,17 @@ The Blynk dashboard provides the following information:
   <img src="images/dashboard.png" width="700">
 </p>
 
+## Practical Setup
+ 
+| Top View | Side View |
+|----------|-----------|
+| <img src="images/top_view.jpg" width="300"> | <img src="images/side_view.jpg" width="300"> |
+ 
+| Tank View | Circuit Close-up |
+|-----------|-----------------|
+| <img src="images/tank_view.jpg" width="300"> | <img src="images/circuit_closeup.jpg" width="300"> |
+ 
+---
 
 ## Installation and Setup
 
