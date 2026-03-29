@@ -61,7 +61,9 @@ The system consists of four main components:
 
 ---
 
-## Pin Configuration
+## Circuit Diagram Explanation
+
+### ESP32 Pin Connections
 
 | Component | ESP32 Pin |
 |-----------|----------|
@@ -70,6 +72,56 @@ The system consists of four main components:
 | Relay Module | GPIO 14 |
 | Buzzer | GPIO 27 |
 | Flow Sensor Signal | GPIO 26 |
+| VCC | 5V / 3.3V |
+| GND | GND |
+
+---
+
+### Ultrasonic Sensor (HC-SR04)
+
+| Pin | Connection |
+|-----|-----------|
+| VCC | 5V |
+| GND | GND |
+| TRIG | GPIO 12 |
+| ECHO | GPIO 13 |
+
+**Purpose:** Measures the distance between the sensor and the water surface to determine the water level.
+
+---
+
+### Relay Module
+
+| Pin | Connection |
+|-----|-----------|
+| VCC | 5V |
+| GND | GND |
+| IN | GPIO 14 |
+
+**Purpose:** Controls the water pump automatically based on system logic.
+
+---
+
+### Buzzer
+
+| Pin | Connection |
+|-----|-----------|
+| Positive | GPIO 27 |
+| Negative | GND |
+
+**Purpose:** Provides an alert when the tank reaches a critical level.
+
+---
+
+### Water Flow Sensor (YF-S201)
+
+| Wire Color | Connection |
+|------------|-----------|
+| Red | 5V |
+| Black | GND |
+| Yellow | GPIO 26 |
+
+**Purpose:** Measures water usage by generating pulses proportional to water flow.
 
 ---
 
