@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartWater — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --surface: #101828;
+      --surface2: #1a2538;
+      --border: #1f3050;
+      --accent: #00c9ff;
+      --accent2: #0077ff;
+      --green: #00e676;
+      --yellow: #ffd740;
+      --red: #ff5252;
+      --text: #e8f0fe;
+      --muted: #5a7a9a;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,201,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,201,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo h1 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .status-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .dot.offline { background: var(--red); animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Config panel */
+    .config-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .config-panel h3 {
+      width: 100%;
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: -4px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .field label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    .field input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus { border-color: var(--accent); }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+    }
+
+    .btn-danger:hover { background: rgba(255,82,82,0.1); }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    .col-4 { grid-column: span 4; }
+    .col-5 { grid-column: span 5; }
+    .col-7 { grid-column: span 7; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    .card-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* Water Tank Viz */
+    .tank-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tank-outer {
+      width: 120px;
+      height: 200px;
+      border: 2.5px solid var(--border);
+      border-radius: 8px 8px 12px 12px;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+
+    .tank-fill {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(180deg, rgba(0,201,255,0.5), rgba(0,119,255,0.8));
+      transition: height 0.8s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 0 0 9px 9px;
+    }
+
+    /* Wave animation inside tank */
+    .tank-fill::before {
+      content: '';
+      position: absolute;
+      top: -10px; left: -20px;
+      width: calc(100% + 40px);
+      height: 20px;
+      background: rgba(0,201,255,0.4);
+      border-radius: 50%;
+      animation: wave 2.5s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-20px); }
+    }
+
+    .tank-pct {
+      font-family: var(--font-head);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .tank-status {
+      font-size: 12px;
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+
+    .status-low { background: rgba(255,82,82,0.15); color: var(--red); border: 1px solid rgba(255,82,82,0.3); }
+    .status-medium { background: rgba(255,215,64,0.15); color: var(--yellow); border: 1px solid rgba(255,215,64,0.3); }
+    .status-high { background: rgba(0,230,118,0.15); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
+
+    /* Stat cards */
+    .stat-val {
+      font-family: var(--font-head);
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-unit {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .stat-change {
+      font-size: 12px;
+      margin-top: 8px;
+      color: var(--green);
+    }
+
+    /* Pump control */
+    .pump-toggle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .pump-btn {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 2.5px solid var(--border);
+      background: var(--surface2);
+      cursor: pointer;
+      font-size: 28px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .pump-btn.on {
+      border-color: var(--green);
+      background: rgba(0,230,118,0.1);
+      box-shadow: 0 0 20px rgba(0,230,118,0.3);
+    }
+
+    .pump-btn.off {
+      border-color: var(--muted);
+    }
+
+    .pump-btn:hover { transform: scale(1.05); }
+
+    .pump-label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pump-label span {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Gauge bar */
+    .gauge-bar {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      transition: width 0.8s;
+    }
+
+    /* Billing Table */
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .billing-table th {
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .billing-table td {
+      padding: 10px 10px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(31,48,80,0.5);
+    }
+
+    .billing-table tr:last-child td { border-bottom: none; }
+
+    .bill-total {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(0,119,255,0.15), rgba(0,201,255,0.1));
+      border: 1px solid rgba(0,201,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bill-total-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .bill-total-val {
+      font-family: var(--font-head);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    /* Reset btn */
+    .reset-section {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .reset-note { font-size: 11px; color: var(--muted); }
+
+    /* Mini history bars */
+    .history-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 60px;
+      margin-top: 14px;
+    }
+
+    .bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      min-height: 4px;
+    }
+
+    .bar:hover { opacity: 1; }
+
+    .bar-lbl { font-size: 9px; color: var(--muted); }
+
+    /* Alerts */
+    .alert-box {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .alert-warn {
+      background: rgba(255,215,64,0.1);
+      border: 1px solid rgba(255,215,64,0.25);
+      color: var(--yellow);
+    }
+
+    .alert-danger {
+      background: rgba(255,82,82,0.1);
+      border: 1px solid rgba(255,82,82,0.25);
+      color: var(--red);
+    }
+
+    .alert-ok {
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.25);
+      color: var(--green);
+    }
+
+    /* Loading shimmer */
+    .shimmer {
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Refresh timer */
+    .refresh-ring {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      animation: spin 5s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .refresh-ring.active { display: block; }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .col-4, .col-5, .col-7, .col-6, .col-8 { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">💧</div>
+      <h1>Smart<span>Water</span></h1>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="refresh-ring active" id="refreshRing"></div>
+      <div class="status-pill">
+        <div class="dot" id="connDot"></div>
+        <span id="connLabel">Connecting…</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Config Panel -->
+  <div class="config-panel">
+    <h3>⚙ Blynk Configuration</h3>
+    <div class="field">
+      <label>Auth Token</label>
+      <input type="text" id="authToken" placeholder="Your Blynk Auth Token" value="Gd0X89ukzvnTnByK2lPWVtOPm7ceSvPR"/>
+    </div>
+    <div class="field" style="max-width:200px;">
+      <label>Server</label>
+      <input type="text" id="blynkServer" value="blynk.cloud"/>
+    </div>
+    <div class="field" style="max-width:120px;">
+      <label>Refresh (sec)</label>
+      <input type="number" id="refreshInterval" value="5" min="2" max="60"/>
+    </div>
+    <div class="field" style="max-width:120px;">
+      <label>Rate (৳/L)</label>
+      <input type="number" id="ratePerLiter" value="0.80" step="0.01"/>
+    </div>
+    <button class="btn btn-primary" onclick="connectBlynk()">Connect & Start</button>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="grid">
+
+    <!-- Tank Visualization -->
+    <div class="card col-4">
+      <div class="card-label">Tank Level</div>
+      <div class="tank-wrapper">
+        <div class="tank-outer">
+          <div class="tank-fill" id="tankFill" style="height:0%"></div>
+        </div>
+        <div class="tank-pct" id="tankPct">--%</div>
+        <div class="tank-status status-medium" id="tankStatus">WAITING</div>
+      </div>
+    </div>
+
+    <!-- Right column top row -->
+    <div style="grid-column: span 8; display: flex; flex-direction: column; gap: 20px;">
+
+      <!-- Stats Row -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+        <div class="card">
+          <div class="card-label">Water Usage</div>
+          <div class="stat-val" id="usageVal" style="color:var(--accent)">--</div>
+          <div class="stat-unit">Liters this month</div>
+          <div class="gauge-bar" style="margin-top:14px;">
+            <div class="gauge-fill" id="usageBar" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Estimated Bill</div>
+          <div class="stat-val" id="billVal" style="color:var(--yellow)">--</div>
+          <div class="stat-unit">৳ BDT this month</div>
+          <div class="stat-change" id="billChange">Waiting for data…</div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Pump Control</div>
+          <div class="pump-toggle">
+            <button class="pump-btn off" id="pumpBtn" onclick="togglePump()">⚡</button>
+            <div class="pump-label">Status: <span id="pumpLabel">UNKNOWN</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Alerts -->
+      <div class="card">
+        <div class="card-label">System Alerts</div>
+        <div id="alertArea">
+          <div class="alert-ok">✅ System initializing — connect to begin monitoring.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Billing Breakdown -->
+    <div class="card col-7">
+      <div class="card-label">Billing Breakdown</div>
+      <table class="billing-table">
+        <thead>
+          <tr>
+            <th>Usage (L)</th>
+            <th>Rate (৳/L)</th>
+            <th>Amount (৳)</th>
+          </tr>
+        </thead>
+        <tbody id="billingRows">
+          <tr>
+            <td colspan="4" style="color:var(--muted); text-align:center; padding:20px;">
+              Connect to load billing data
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bill-total">
+        <div>
+          <div class="bill-total-label">Total Bill</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:3px;" id="billingCycle">—</div>
+        </div>
+        <div class="bill-total-val" id="totalBillDisplay">৳ --</div>
+      </div>
+
+      <div class="reset-section">
+        <span class="reset-note">⚠ Resets monthly usage counter on device</span>
+        <button class="btn btn-danger" onclick="resetUsage()">Reset Monthly Usage</button>
+      </div>
+    </div>
+
+    <!-- Usage History (local session) -->
+    <div class="card col-5">
+      <div class="card-label">Session History (last 10 readings)</div>
+      <div class="history-bars" id="historyBars">
+        <!-- bars rendered by JS -->
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:8px;">
+        <span style="font-size:10px; color:var(--muted)">oldest</span>
+        <span style="font-size:10px; color:var(--muted)">latest</span>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="card-label">Live Readings Log</div>
+        <div id="logArea" style="height:100px; overflow-y:auto; font-size:11px; color:var(--muted); line-height:1.8;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>IoT Smart Water Monitoring</span>
+    <span id="lastUpdate">Last update: never</span>
+  </footer>
+
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────
+  let AUTH = '';
+  let SERVER = 'blynk.cloud';
+  let INTERVAL = 5000;
+  let RATE = 0.80;
+  let timer = null;
+  let pumpOn = false;
+  let usageHistory = [];
+  let connected = false;
+
+  // ── Blynk REST helpers ─────────────────────────────────
+  async function blynkGet(pin) {
+    const url = `https://${SERVER}/external/api/get?token=${AUTH}&${pin}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  async function blynkSet(pin, value) {
+    const url = `https://${SERVER}/external/api/update?token=${AUTH}&${pin}=${value}`;
+    await fetch(url);
+  }
+
+  // ── Connect ────────────────────────────────────────────
+  function connectBlynk() {
+    AUTH    = document.getElementById('authToken').value.trim();
+    SERVER  = document.getElementById('blynkServer').value.trim();
+    INTERVAL= parseInt(document.getElementById('refreshInterval').value) * 1000;
+    RATE    = parseFloat(document.getElementById('ratePerLiter').value);
+
+    if (!AUTH) { alert('Enter your Blynk Auth Token first.'); return; }
+
+    if (timer) clearInterval(timer);
+    fetchData();
+    timer = setInterval(fetchData, INTERVAL);
+  }
+
+  // ── Main fetch ─────────────────────────────────────────
+  async function fetchData() {
+    try {
+      const [levelRaw, pumpRaw, usageRaw, billRaw] = await Promise.all([
+        blynkGet('v0'),
+        blynkGet('v1'),
+        blynkGet('v2'),
+        blynkGet('v3'),
+      ]);
+
+      connected = true;
+      setConnected(true);
+
+      const level   = parseFloat(levelRaw) || 0;
+      const pump    = parseInt(pumpRaw) || 0;
+      const usage   = parseFloat(usageRaw) || 0;
+      const bill    = parseFloat(billRaw) || 0;
+
+      updateTank(level);
+      updatePump(pump);
+      updateUsage(usage, bill);
+      updateBilling(usage, bill);
+      updateAlerts(level, pump);
+      addHistory(level);
+      logReading(level, usage, bill);
+      document.getElementById('lastUpdate').textContent =
+        `Last update: ${new Date().toLocaleTimeString()}`;
+
+    } catch (err) {
+      connected = false;
+      setConnected(false);
+      console.error(err);
+    }
+  }
+
+  // ── UI Updates ─────────────────────────────────────────
+  function setConnected(ok) {
+    const dot = document.getElementById('connDot');
+    const lbl = document.getElementById('connLabel');
+    dot.className = 'dot' + (ok ? '' : ' offline');
+    lbl.textContent = ok ? 'Live' : 'Disconnected';
+  }
+
+  function updateTank(pct) {
+    const fill   = document.getElementById('tankFill');
+    const pctEl  = document.getElementById('tankPct');
+    const status = document.getElementById('tankStatus');
+
+    pct = Math.max(0, Math.min(100, pct));
+    fill.style.height = pct + '%';
+    pctEl.textContent = pct.toFixed(1) + '%';
+
+    // Color the fill based on level
+    if (pct < 30) {
+      fill.style.background = 'linear-gradient(180deg, rgba(255,82,82,0.5), rgba(200,0,0,0.8))';
+      status.className = 'tank-status status-low';
+      status.textContent = 'LOW';
+    } else if (pct < 70) {
+      fill.style.background = 'linear-gradient(180deg, rgba(255,215,64,0.5), rgba(180,130,0,0.8))';
+      status.className = 'tank-status status-medium';
+      status.textContent = 'MEDIUM';
+    } else {
+      fill.style.background = 'linear-gradient(180deg, rgba(0,201,255,0.5), rgba(0,119,255,0.8))';
+      status.className = 'tank-status status-high';
+      status.textContent = 'HIGH';
+    }
+  }
+
+  function updatePump(state) {
+    pumpOn = state === 1;
+    const btn = document.getElementById('pumpBtn');
+    const lbl = document.getElementById('pumpLabel');
+    btn.className = 'pump-btn ' + (pumpOn ? 'on' : 'off');
+    lbl.textContent = pumpOn ? 'ON 🟢' : 'OFF 🔴';
+    lbl.style.color = pumpOn ? 'var(--green)' : 'var(--red)';
+  }
+
+  function updateUsage(usage, bill) {
+    document.getElementById('usageVal').textContent = usage.toFixed(1);
+    const maxMonth = 3000;
+    document.getElementById('usageBar').style.width = Math.min(100, (usage / maxMonth) * 100) + '%';
+    document.getElementById('billVal').textContent = '৳ ' + bill.toFixed(2);
+
+
+    const now = new Date();
+    document.getElementById('billingCycle').textContent =
+      `Billing cycle: ${now.toLocaleString('default', {month:'long'})} ${now.getFullYear()}`;
+  }
+
+  function updateBilling(usage, bill) {
+    let rows = '';
+
+    if (usage <= 1000) {
+      rows = `
+        <tr>
+          <td>${usage.toFixed(2)}</td>
+          <td>৳ 0.80</td>
+          <td>৳ ${(usage * 0.80).toFixed(2)}</td>
+        </tr>`;
+    } else {
+      rows = `
+        <tr>
+          <td>${usage.toFixed(2)}</td>
+          <td>৳ 0.80</td>
+          <td>৳ ${(usage * 0.80).toFixed(2)}</td>
+        </tr>`;
+    }
+
+    document.getElementById('billingRows').innerHTML = rows;
+    document.getElementById('totalBillDisplay').textContent = '৳ ' + bill.toFixed(2);
+  }
+
+  function updateAlerts(level, pump) {
+    const alerts = [];
+
+    if (level < 30) {
+      alerts.push(['danger', '🚨 Water level CRITICAL — below 30%. Pump should be ON.']);
+    }
+    if (level >= 80) {
+      alerts.push(['warn', '🔔 Tank NEARLY FULL (≥80%) — buzzer should be active.']);
+    }
+    if (level >= 100) {
+      alerts.push(['danger', '⛔ Tank FULL — pump should turn OFF automatically.']);
+    }
+    if (level >= 30 && level < 80) {
+      alerts.push(['ok', `✅ Water level normal at ${level.toFixed(1)}%.`]);
+    }
+    if (pump && level >= 90) {
+      alerts.push(['warn', '⚠ Pump is ON but tank is nearly full — check relay logic.']);
+    }
+
+    const area = document.getElementById('alertArea');
+    area.innerHTML = alerts.map(([t, msg]) =>
+      `<div class="alert-box alert-${t}">${msg}</div>`
+    ).join('');
+  }
+
+  function addHistory(level) {
+    usageHistory.push(level);
+    if (usageHistory.length > 10) usageHistory.shift();
+    const max = Math.max(...usageHistory, 1);
+    const container = document.getElementById('historyBars');
+    container.innerHTML = usageHistory.map((v, i) => `
+      <div class="bar-wrap">
+        <div class="bar" style="height:${(v/max*54)}px;" title="${v.toFixed(1)}%"></div>
+        <div class="bar-lbl">${Math.round(v)}</div>
+      </div>
+    `).join('');
+  }
+
+  function logReading(level, usage, bill) {
+    const log = document.getElementById('logArea');
+    const line = document.createElement('div');
+    line.textContent = `[${new Date().toLocaleTimeString()}] Level: ${level.toFixed(1)}% | Usage: ${usage.toFixed(1)}L | Bill: ৳${bill.toFixed(2)}`;
+    log.prepend(line);
+    while (log.children.length > 30) log.removeChild(log.lastChild);
+  }
+
+  // ── Controls ───────────────────────────────────────────
+  async function togglePump() {
+    if (!AUTH) { alert('Connect first.'); return; }
+    const newState = pumpOn ? 0 : 1;
+    await blynkSet('v1', newState);
+    updatePump(newState);
+  }
+
+  async function resetUsage() {
+    if (!AUTH) { alert('Connect first.'); return; }
+    if (!confirm('Reset monthly usage? This will trigger reset on the device.')) return;
+    await blynkSet('v4', 1);
+    setTimeout(() => blynkSet('v4', 0), 1000);
+    alert('Reset signal sent to device!');
+  }
+</script>
+
+</body>
+</html>
