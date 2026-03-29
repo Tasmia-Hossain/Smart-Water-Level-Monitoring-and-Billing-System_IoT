@@ -174,19 +174,6 @@ The conversion factor of 450 pulses per liter is an assumed average based on the
 
 ---
 
-## IoT Dashboard
-
-The Blynk dashboard provides the following information:
-
-- Water level percentage  
-- Pump status  
-- Water usage (liters)  
-- Daily and monthly usage  
-- Estimated billing amount  
-
-<p align="center">
-  <img src="images/dashboard.png" width="700">
-</p>
 
 ## Practical Setup
  
@@ -198,6 +185,22 @@ The Blynk dashboard provides the following information:
 |-----------|-----------------|
 | <img src="images/tank_view.jpeg" width="300"> | <img src="images/circuit_closeup.jpg" width="300"> |
  
+---
+
+## IoT Dashboard
+
+The Blynk dashboard provides the following information:
+
+- Water level percentage  
+- Pump status  
+- Water usage (liters)  
+- Daily and monthly usage  
+- Estimated billing amount  
+
+| Web Dashboard | Blynk Mobile App |
+|---------------|-----------------|
+| <img src="images/dashboard.png" width="500"> | <img src="images/blynk_app.png" width="250"> |
+
 ---
 
 ## Installation and Setup
