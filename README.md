@@ -153,7 +153,7 @@ char pass[] = "YOUR_WIFI_PASSWORD";
 
 ### Step 4: Add Blynk Authentication Token
 ```cpp
-#define BLYNK_AUTH_TOKEN "YOUR_TOKEN"
+define BLYNK_AUTH_TOKEN "YOUR_TOKEN"
 ```
 
 ### Step 5: Upload Code
