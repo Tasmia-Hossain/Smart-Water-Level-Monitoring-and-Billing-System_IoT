@@ -258,3 +258,9 @@ Create a Blynk dashboard and add widgets for:
 
 Department of Computer Science and Engineering  
 Ahsanullah University of Science and Technology  
+
+---
+
+## Documentation
+
+For a more detailed explanation, please refer to the [IoT_Project_Report.pdf](IoT_Project_Report.pdf).
